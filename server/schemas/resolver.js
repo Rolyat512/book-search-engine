@@ -1,34 +1,26 @@
-const { AuthenticationError } = require('apollo-server-express');
-const { User, Book } = require('../models');
-const { signToken } = require('../utils/auth');
+const { AuthenticationError } = require("apollo-server-express");
+const { User, Book } = require("../models");
+const { signToken } = require("../utils/auth");
 
-
-// Not sure if the code below is correct 
+// Not sure if the code below is correct. Copied and modified from class code?
 
 const resolvers = {
-    Query: {
-        users: async () => {
-            return User.find().populate('savedBooks');
-          },
-          user: async (parent, { username }) => {
-            return User.findOne({ username }).populate('savedBooks');
-          },
-          books: async (parent, { username }) => {
-            const params = username ? { username } : {};
-            return Book.find(params).sort({ createdAt: -1 });
-          },
-          book: async (parent, { bookId }) => {
-            return Book.findOne({ _id: bookId });
-          },
-          me: async (parent, context) => {
-            if (context.user) {
-              return User.findOne({ _id: context.user._id }).populate('savedBooks');
-            }
-            throw new AuthenticationError('You need to be logged in!');
-          },
-    },
+	Query: {
+		users: async () => {
+			return User.find();
+		},
 
-    Mutation: {
+		profile: async (parent, { userId }) => {
+			return User.findOne({ _id: userId });
+		},
+		// By adding context to our query, we can retrieve the logged in user without specifically searching for them
+		me: async (parent, args, context) => {
+			if (context.user) {
+				return User.findOne({ _id: context.user._id });
+			}
+			throw new AuthenticationError("You need to be logged in!");
+		},
+	},
 
-    }
-}
+	Mutation: {},
+};
