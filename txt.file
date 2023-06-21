@@ -1,0 +1,9 @@
+Finished server.js 
+
+Need to do the auth.js to do 
+
+- Created Schema folder 
+    - created index.js file 
+    - created resolvers.js 
+        - Need to define the query and mutation functionality 
+    - created typeDefs.js 
